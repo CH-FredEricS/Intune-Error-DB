@@ -6,7 +6,7 @@ A standalone, offline-capable browser tool for quickly looking up Microsoft Intu
 
 ## Overview
 
-The Intune Error Database is a single HTML file that runs entirely in the browser — no server, no installation, no internet connection required. It contains 75 documented Intune errors across 9 categories, each with a full error code, description, common causes, resolution steps, and a direct link to the relevant Microsoft Learn documentation page.
+The Intune Error Database is a single HTML file that runs entirely in the browser — no server, no installation, no internet connection required. It contains 106 documented Intune errors across 13 categories, each with a full error code, description, common causes, resolution steps, and a direct link to the relevant Microsoft Learn or community documentation page.
 
 ---
 
@@ -33,16 +33,19 @@ The Intune Error Database is a single HTML file that runs entirely in the browse
 
 | Category | Errors | Description |
 |---|---|---|
-| Autopilot | 10 | Windows Autopilot deployment, ESP, profile assignment, TPM attestation |
-| Applications | 12 | Win32 apps, MSI, Store apps, IME, detection rules, supersedence |
+| Autopilot | 14 | Deployment, ESP, profile assignment, TPM attestation, hardware-specific issues |
+| Applications | 19 | Win32 apps, MSI, Store apps, IME, detection rules, supersedence, exit codes, Android/iOS |
 | Compliance | 8 | BitLocker, Defender AV, OS version, Secure Boot, firewall, passwords |
-| Enrollment | 8 | Windows, iOS, Android enrollment, licensing, platform restrictions |
-| Configuration | 10 | OMA-URI, certificates (SCEP/PKCS), Wi-Fi, VPN, email, update rings |
-| Security | 7 | Security baselines, Conditional Access, LAPS, WHfB, MDE, ASR rules |
+| Enrollment | 12 | Windows, iOS, Android enrollment, licensing, platform restrictions, registry blocks |
+| Configuration | 15 | OMA-URI, certificates (SCEP/PKCS), Wi-Fi, VPN, email, update rings, Settings Catalog |
+| Security | 8 | Security baselines, Conditional Access, LAPS, WHfB, MDE, ASR rules, DFCI |
 | Co-management | 3 | ConfigMgr/Intune co-management, workload switching, MDM authority |
-| Device Management | 5 | Check-in failures, remote actions, wipe/retire, scope tags |
+| Device Management | 8 | Check-in failures, remote actions, wipe/retire, scope tags, UPN issues |
 | Mobile | 5 | iOS APN/ABM/VPP, Android work profiles, Managed Google Play |
 | Connectors | 4 | ODJ Connector, Certificate Connector, Exchange Connector, NPS Extension |
+| Device Sync | 4 | MDM certificate failures, private key issues, sync errors (0x80072f99, 0x80072f9a) |
+| Autopilot Device Prep | 3 | AP-DP group ownership, Managed Installer OOBE issue, time zone deployment failure |
+| App Protection (MAM) | 3 | MAM policy not applying, Conditional Access app requirements, data transfer restrictions |
 
 ---
 
@@ -105,11 +108,11 @@ The error data is stored as a JavaScript array inside the HTML file. To add new 
 ```
 
 **Guidelines for new entries:**
-- `id` must be unique across all entries (suggested format: `cat###`, e.g. `ap011`, `comp009`)
+- `id` must be unique across all entries (suggested format: `cat###`, e.g. `ap015`, `comp009`, `mam004`)
 - `cat` must exactly match an existing category name, or a new category will be created automatically in the sidebar
-- `code` should be the full hex error code as it appears in Intune or Windows logs
+- `code` should be the full hex error code as it appears in Intune or Windows logs; for non-code issues use a short descriptive identifier
 - `causes` and `steps` should each have 3–5 entries for consistency
-- `url` should point to the most relevant Microsoft Learn page for the error
+- `url` should point to the most relevant Microsoft Learn or trusted community documentation page for the error
 
 Alternatively, share the error details in a conversation with Claude and request an updated HTML file — the new entries will be added and a fresh file generated for download.
 
@@ -124,16 +127,32 @@ Alternatively, share the error details in a conversation with Claude and request
 | Browser support | All modern browsers (Chrome 90+, Edge 90+, Firefox 88+, Safari 14+) |
 | Internet required | No — fully offline capable |
 | Data storage | Embedded in HTML (JavaScript array) |
-| Total entries | 75 errors |
+| Total entries | 106 errors |
 
 ---
 
 ## Known Limitations
 
-- Error data reflects knowledge available as of the tool's creation date; new Intune errors released by Microsoft after that date will not be present until manually added
-- The tool does not sync with any live Microsoft database or API
+- Error data is sourced from Microsoft Learn documentation and community blogs including call4cloud.nl, patchmypc.com, patchtuesday.com, msendpointmgr.com, and systemcenterdudes.com, reflecting knowledge available up to April 2026
+- The tool does not sync with any live Microsoft database or API; new errors or changes after the last update will not be present until manually added
 - There is no built-in export or print function; use the browser's built-in print/save-as-PDF feature if a printed reference is needed
 - The search does not support wildcard operators or boolean logic; it performs a simple substring match across all fields
+- Some entries reference known issues that may have been resolved by Microsoft since documentation; always verify current status on Microsoft Learn
+
+---
+
+## Sources
+
+Error entries are compiled from the following sources:
+
+| Source | Focus area |
+|---|---|
+| [Microsoft Learn — Intune](https://learn.microsoft.com/en-us/mem/intune/) | Official Microsoft documentation, error codes, known issues |
+| [call4cloud.nl](https://call4cloud.nl) | Sync errors, MDM certificates, Settings Catalog, enrollment deep dives |
+| [patchmypc.com/blog](https://patchmypc.com/blog) | Autopilot, IME, ESP, TPM attestation, Win32 app deployment |
+| [patchtuesday.com](https://patchtuesday.com) | Win32 app lifecycle, exit codes, TPM attestation, Autopilot |
+| [msendpointmgr.com](https://msendpointmgr.com) | Endpoint management, Win32 app state messages, Delivery Optimization |
+| [systemcenterdudes.com](https://www.systemcenterdudes.com) | Autopilot errors, enrollment errors, Intune logs |
 
 ---
 
